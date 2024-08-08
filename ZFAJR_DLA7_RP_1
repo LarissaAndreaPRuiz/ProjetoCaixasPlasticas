@@ -1,0 +1,59 @@
+*&---------------------------------------------------------------------*
+*& Report ZFAJR_DLA7_RP_1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZFAJR_DLA7_RP_1.
+
+*ZFAJR_DLA7_3 - Tabela de Cabeçalho de vendas
+*ZFAJR_DLA7_4 - Tabela de Itens do pedido
+
+data: ls_header_old type zfajr_dla7_3,
+      lt_items_old TYPE TABLE OF ZFAJR_DLA7_4,
+      ls_items_old TYPE ZFAJR_DLA7_4.
+
+*Adicionar Cabeçalho:
+  ls_header_old-id       = 1.
+  ls_header_old-username = sy-uname.
+  ls_header_old-data     = sy-datum.
+  ls_header_old-hora     = sy-uzeit.
+
+MODIFY zfajr_dla7_3 FROM ls_header_old.
+
+*Adicionar items:
+  ls_items_old-id          = 1.
+  ls_items_old-item        = 1.
+  ls_items_old-produto     = 1.
+  ls_items_old-quantidade  = 2.
+APPEND ls_items_old TO lt_items_old.
+
+  ls_items_old-id          = 1.
+  ls_items_old-item        = 2.
+  ls_items_old-produto     = 3.
+  ls_items_old-quantidade  = 1.
+APPEND ls_items_old TO lt_items_old.
+
+  ls_items_old-id          = 1.
+  ls_items_old-item        = 3.
+  ls_items_old-produto     = 5.
+  ls_items_old-quantidade  = 1.
+APPEND ls_items_old TO lt_items_old.
+
+MODIFY ZFAJR_DLA7_4 FROM TABLE lt_items_old .
+
+
+"MODO MODERNO (INLINE):
+DATA(ls_header) = VALUE zfajr_dla7_3(
+    id       = 2
+    username = sy-uname
+    data     = sy-datum
+    hora     = sy-uzeit
+).
+MODIFY ZFAJR_DLA7_3 FROM ls_header.
+
+TYPES: tt_items TYPE TABLE OF ZFAJR_DLA7_4 WITH DEFAULT KEY.
+DATA(lt_items) = VALUE tt_items(
+  ( id = 2 item = 1 produto = 5 quantidade = 1 )
+  ( id = 2 item = 2 produto = 3 quantidade = 1 )
+).
+MODIFY ZFAJR_DLA7_4 FROM TABLE lt_items.
